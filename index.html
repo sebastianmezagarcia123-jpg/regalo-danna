@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Felicidades Danna! - Gargantua</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: #020205;
+            color: white;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* FONDO CON MUCHÍSIMAS ESTRELLAS */
+        .space {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1B2735 0%, #020205 100%);
+            z-index: -1;
+        }
+
+        .stars-container {
+            position: absolute;
+            width: 1.5px; height: 1.5px;
+            background: white;
+            border-radius: 50%;
+            /* Generación masiva de estrellas mediante sombras */
+            box-shadow: 
+                244px 352px #FFF, 835px 843px #FFF, 345px 567px #FFF, 1200px 300px #FFF, 
+                400px 800px #FFF, 150px 150px #FFF, 500px 200px #FFF, 200px 900px #FFF, 
+                600px 100px #FFF, 100px 200px #EEE, 800px 400px #DDD, 1300px 600px #FFF,
+                50px 700px #FFF, 950px 850px #FFF, 1100px 100px #EEE, 250px 50px #FFF,
+                450px 450px #DDD, 700px 750px #FFF, 850px 250px #EEE, 1400px 850px #FFF,
+                10vw 20vh #FFF, 30vw 50vh #FFF, 70vw 10vh #FFF, 90vw 80vh #FFF, 45vw 30vh #FFF,
+                15vw 85vh #FFF, 65vw 60vh #FFF, 25vw 15vh #FFF, 80vw 40vh #FFF, 5vw 55vh #FFF,
+                55vw 90vh #FFF, 35vw 75vh #FFF, 12vw 45vh #EEE, 88vw 12vh #FFF, 42vw 68vh #DDD;
+            animation: twinkle 4s infinite alternate;
+        }
+
+        @keyframes twinkle { from { opacity: 0.4; } to { opacity: 1; } }
+
+        /* AGUJERO NEGRO MÁS GRANDE */
+        .gargantua-container {
+            position: relative;
+            width: 800px; height: 800px; /* Tamaño base aumentado */
+            display: flex; justify-content: center; align-items: center;
+            perspective: 2000px;
+        }
+
+        .event-horizon {
+            width: 350px; height: 350px; /* Horizonte de sucesos mucho más grande */
+            background: black;
+            border-radius: 50%;
+            box-shadow: 
+                0 0 50px #fff, 
+                0 0 100px #f08, 
+                0 0 150px #0ff;
+            z-index: 5;
+            position: relative;
+        }
+
+        .accretion-disk {
+            position: absolute;
+            width: 1100px; height: 450px; /* Disco de acreción masivo */
+            border-radius: 50%;
+            box-shadow: 
+                inset 0 0 120px #fff, 
+                0 0 100px #ff9d00, 
+                0 0 200px #ff5e00;
+            transform: rotateX(82deg); /* Inclinación más cinematográfica */
+            filter: blur(6px);
+            animation: gravitational-glow 6s ease-in-out infinite alternate;
+        }
+
+        @keyframes gravitational-glow {
+            from { opacity: 0.7; transform: rotateX(82deg) scale(0.98); }
+            to { opacity: 1; transform: rotateX(82deg) scale(1.05); }
+        }
+
+        .message-box {
+            position: absolute;
+            z-index: 10;
+            text-align: center;
+            pointer-events: none;
+            width: 500px;
+        }
+
+        .message-box h1 { 
+            font-size: 3rem; 
+            text-shadow: 0 0 25px #fff; 
+            margin-bottom: 15px;
+            letter-spacing: 4px;
+        }
+        .message-box p { 
+            font-size: 1.1rem; 
+            line-height: 1.6; 
+            text-shadow: 0 3px 6px #000; 
+            background: rgba(0,0,0,0.2); 
+            border-radius: 20px;
+            padding: 10px;
+        }
+
+        /* Fotos situadas más afuera para el nuevo tamaño del agujero */
+        .polaroid {
+            position: absolute;
+            background: white;
+            padding: 10px 10px 30px 10px;
+            box-shadow: 0 12px 25px rgba(0,0,0,0.9);
+            width: 150px;
+            cursor: pointer;
+            transition: transform 0.4s;
+            z-index: 20;
+        }
+
+        .polaroid img { width: 130px; height: 130px; object-fit: cover; }
+        .polaroid:hover { transform: scale(1.2) !important; z-index: 50; }
+
+        .p1 { top: 2%; left: 8%; transform: rotate(-10deg); }
+        .p2 { top: 2%; right: 8%; transform: rotate(15deg); }
+        .p3 { bottom: 5%; left: 8%; transform: rotate(8deg); }
+        .p4 { bottom: 5%; right: 8%; transform: rotate(-12deg); }
+        .p5 { top: 45%; left: 1%; transform: rotate(-5deg); }
+        .p6 { top: 45%; right: 1%; transform: rotate(5deg); }
+
+        /* MODAL */
+        #photo-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+        }
+
+        #modal-img {
+            width: 400px;
+            border: 15px solid white;
+            box-shadow: 0 0 60px rgba(255,255,255,0.3);
+            margin-bottom: 25px;
+        }
+
+        #modal-text {
+            font-size: 1.6rem;
+            max-width: 85%;
+            text-align: center;
+            color: #ff9d00;
+            text-shadow: 0 0 15px rgba(255,157,0,0.6);
+            font-weight: bold;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px; right: 40px;
+            font-size: 4rem;
+            cursor: pointer;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="space"></div>
+    <div class="stars-container"></div>
+    <div class="stars-container" style="transform: rotate(180deg); animation-delay: 1s;"></div>
+
+    <div class="photo-layer">
+        <div class="polaroid p1" data-message="¡La mejor enfermera de todo el mundo!">
+            <img src="2.jpeg">
+        </div>
+        <div class="polaroid p2" data-message="My wife, la enfermera que más le robaron :v.">
+            <img src="4.jpeg">
+        </div>
+        <div class="polaroid p3" data-message="Simplemente lo mejor de lo mejor de Magangue.">
+            <img src="6.jpeg">
+        </div>
+        <div class="polaroid p4" data-message="I love you <3.">
+            <img src="11.jpeg">
+        </div>
+        <div class="polaroid p5" data-message="Danna, la enfermera más hermosa de Colombia.">
+            <img src="12.jpeg">
+        </div>
+        <div class="polaroid p6" data-message="¡Feliz día! Disfruta tu momento.">
+            <img src="14.jpeg">
+        </div>
+    </div>
+
+    <div class="gargantua-container">
+        <div class="accretion-disk"></div>
+        <div class="event-horizon"></div>
+        <div class="message-box">
+            <h1>¡FELICIDADES!</h1>
+            <p>¡Muchas felicidades! Hoy celebramos el Día de la Enfermera y el Enfermero, y tengo la fortuna de conocer a la mejor de toda Colombia: <br><strong>Danna Arraut Hernández</strong>. Deseo que este sea un día muy especial para ti y que lo disfrutes al máximo. ¡Te lo mereces!</p>
+        </div>
+    </div>
+
+    <div id="photo-modal">
+        <span class="close-btn">&times;</span>
+        <img id="modal-img" src="">
+        <p id="modal-text"></p>
+    </div>
+
+    <script>
+        const polaroids = document.querySelectorAll('.polaroid');
+        const modal = document.getElementById('photo-modal');
+        const modalImg = document.getElementById('modal-img');
+        const modalText = document.getElementById('modal-text');
+        const closeBtn = document.querySelector('.close-btn');
+
+        polaroids.forEach(p => {
+            p.addEventListener('click', () => {
+                const imgSrc = p.querySelector('img').src;
+                const msg = p.getAttribute('data-message');
+                
+                modalImg.src = imgSrc;
+                modalText.innerText = msg;
+                modal.style.display = 'flex';
+            });
+        });
+
+        closeBtn.onclick = () => { modal.style.display = 'none'; }
+        window.onclick = (event) => { if (event.target == modal) { modal.style.display = 'none'; } }
+    </script>
+
+</body>
+</html>
